@@ -62,16 +62,38 @@ void createDirectory() {
     }   
 }
 void changeDirectory() {
+    int option;
     string path;
-    cout << "Enter path to change directory: ";
-    cin.ignore();
-    getline(cin, path);
 
-    if(SetCurrentDirectory(path.c_str())) {
-        char currentPath[MAX_PATH];
-        GetCurrentDirectory(MAX_PATH, currentPath);
-        cout << "Change directory to: " << currrentPath << endl;
+    cout << "[1] Move to Parent Directory\n";
+    cout << "[2] Move to Root Directory\n";
+    cout << "[3] Enter Custom Path\n";
+    cout << "Enter your choice: ";
+    cin >> option;
+    cin.ignore();
+
+    if (option == 1){
+        SetCurrentDirectory("..");
+    } else if (option == 2) {
+        char rootPath[MAX_PATH];
+
+        GetCurrentDirectory(MAX_PATH, rootPath);
+        rootPath[3] ='\0';
+
+        SetCurrentDirectory(rootPath);
+    } else if (option == 3) {
+        cout << "Enter path: ";
+        getline(cin, path);
+        if (!SetCurrentDirectory(path.c_str())) {
+            cout << "Error: Path not found!\n";
+            return;
+        }
     } else {
-        cout << "Error: Path not found\n";
+        cout << "Invalid choice!\n";
+        return;
     }
+    char currentPath[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH, currentPath);
+    cout << "Current directory changed to: " << currentPath << endl;
 }
+
